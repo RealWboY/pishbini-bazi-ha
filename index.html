@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Pishbini Bazi Ha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#080808;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);--surface3:rgba(255,255,255,.11);--border:rgba(255,255,255,.09);--border2:rgba(255,255,255,.16);--text:#f0f0f0;--muted:rgba(240,240,240,.5);--faint:rgba(240,240,240,.28);--green:#4ade80;--red:#f87171;--yellow:#fbbf24;--blue:#60a5fa;--glass:blur(20px) saturate(1.4);--r:20px;--r2:28px;--font:'Inter',sans-serif}
+    [data-theme=light]{--bg:#f0f0ec;--surface:rgba(0,0,0,.04);--surface2:rgba(0,0,0,.06);--surface3:rgba(0,0,0,.09);--border:rgba(0,0,0,.09);--border2:rgba(0,0,0,.16);--text:#0f0f0f;--muted:rgba(15,15,15,.5);--faint:rgba(15,15,15,.28)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh;font-size:15px;line-height:1.5;overflow-x:hidden}
+    button,input{font:inherit;color:inherit;border:none;background:none;cursor:pointer}input{outline:none}
+    .wrap{max-width:920px;margin:0 auto;padding:0 16px;position:relative;z-index:1}
+    .hdr{position:sticky;top:0;z-index:50;backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);background:rgba(8,8,8,.75);border-bottom:1px solid var(--border)}
+    [data-theme=light] .hdr{background:rgba(240,240,236,.75)}
+    .hdr-in{height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo{font-size:clamp(.7rem,.55rem + .5vw,.88rem);font-weight:700;letter-spacing:-.02em;color:var(--muted)}
+    .hdr-btns{display:flex;gap:8px}
+    .ghost-btn{padding:8px 14px;border:1px solid var(--border2);border-radius:999px;backdrop-filter:var(--glass);background:var(--surface2);font-size:.8rem;font-weight:600;transition:.15s;white-space:nowrap}
+    .ghost-btn:hover{background:var(--surface3)}
+    .hero{padding:44px 0 0}
+    .hero-label{font-size:.68rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+    .hero-title{font-size:clamp(2.4rem,1.8rem + 2.5vw,5rem);font-weight:900;letter-spacing:-.07em;line-height:.88}
+    .hero-title span{color:var(--muted)}
+    .glass-card{backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)}
+    .notice{margin:22px 0 0;padding:18px 22px}
+    .notice-title{font-size:clamp(.95rem,.85rem + .3vw,1.1rem);font-weight:800;letter-spacing:-.04em;margin-bottom:6px}
+    .notice-sub{font-size:.8rem;color:var(--muted);line-height:1.6}
+    .scoring{margin:10px 0 0;padding:13px 20px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+    .score-rule{display:flex;align-items:center;gap:7px;font-size:.82rem}
+    .score-badge{font-weight:900;font-size:1.05rem}
+    .score-badge.gold{color:var(--yellow)}
+    .score-badge.silver{color:var(--blue)}
+    .div{width:1px;height:18px;background:var(--border2)}
+    .profiles-wrap{margin:26px 0 0}
+    .profiles-label{font-size:.68rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+    .profiles{display:flex;gap:10px;flex-wrap:wrap}
+    .profile-btn{padding:11px 20px;border:1px solid var(--border2);border-radius:var(--r);backdrop-filter:var(--glass);background:var(--surface2);font-weight:700;font-size:.88rem;letter-spacing:-.02em;transition:.2s;position:relative;overflow:hidden}
+    .profile-btn::before{content:'';position:absolute;inset:0;opacity:0;transition:.2s}
+    .profile-btn[data-player="HANBA"]::before{background:linear-gradient(135deg,rgba(251,191,36,.22),transparent)}
+    .profile-btn[data-player="YASIN BAMBA"]::before{background:linear-gradient(135deg,rgba(96,165,250,.22),transparent)}
+    .profile-btn[data-player="AMA BAMBA"]::before{background:linear-gradient(135deg,rgba(74,222,128,.22),transparent)}
+    .profile-btn[data-player="KAMBAB"]::before{background:linear-gradient(135deg,rgba(248,113,113,.22),transparent)}
+    .profile-btn.active::before{opacity:1}
+    .profile-btn.active{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+    .profile-btn[data-player="HANBA"].active{border-color:rgba(251,191,36,.5)}
+    .profile-btn[data-player="YASIN BAMBA"].active{border-color:rgba(96,165,250,.5)}
+    .profile-btn[data-player="AMA BAMBA"].active{border-color:rgba(74,222,128,.5)}
+    .profile-btn[data-player="KAMBAB"].active{border-color:rgba(248,113,113,.5)}
+    .profile-btn .ck{display:none;margin-right:4px}
+    .profile-btn.active .ck{display:inline}
+    .stats-row{margin:14px 0 0;display:flex;gap:8px;flex-wrap:wrap}
+    .stat-chip{padding:7px 14px;border:1px solid var(--border);border-radius:999px;backdrop-filter:var(--glass);background:var(--surface);font-size:.8rem;display:flex;align-items:center;gap:6px}
+    .stat-chip strong{font-size:.95rem;font-weight:900}
+    .filters-row{margin:24px 0 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .filters{display:flex;gap:6px;flex-wrap:wrap}
+    .filter-btn{padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:var(--surface);font-size:.8rem;font-weight:600;transition:.15s}
+    .filter-btn:hover{background:var(--surface2)}
+    .filter-btn.active{background:var(--text);color:var(--bg);border-color:transparent}
+    .sec-title{font-size:1.1rem;font-weight:800;letter-spacing:-.04em}
+    .section{padding:14px 0 60px}
+    .list{display:grid;gap:10px}
+    .card{padding:18px 20px;transition:.15s}
+    .card:hover{background:var(--surface2)}
+    .card.live-card{border-color:rgba(248,113,113,.35);box-shadow:0 0 0 1px rgba(248,113,113,.15)}
+    .card-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.68rem;color:var(--faint);margin-bottom:14px;letter-spacing:.02em;text-transform:uppercase}
+    .live-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);color:var(--red);padding:3px 10px;border-radius:999px;font-size:.68rem;font-weight:700}
+    .live-dot{width:6px;height:6px;background:var(--red);border-radius:50%;animation:blink 1.2s ease infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+    .ft-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:999px;font-size:.68rem;font-weight:600}
+    .match-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+    .team{text-align:center}
+    .team-flag{font-size:34px;line-height:1;margin-bottom:5px}
+    .team-name{font-size:.82rem;font-weight:700;letter-spacing:-.02em}
+    .match-center{text-align:center}
+    .match-score{font-size:2.2rem;font-weight:900;letter-spacing:-.08em;font-variant-numeric:tabular-nums}
+    .match-score.live-score{color:var(--red)}
+    .match-score.ft-score{color:var(--muted)}
+    .match-time-txt{font-size:1rem;font-weight:800;letter-spacing:-.04em}
+    .match-sub{font-size:.7rem;color:var(--faint);margin-top:5px}
+    .min-tag{display:inline-block;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);color:var(--red);padding:2px 8px;border-radius:999px;font-size:.68rem;font-weight:700;margin-top:4px}
+    .predict{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+    .predict-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+    .inputs{display:flex;gap:8px;align-items:center}
+    .num{width:58px;height:46px;border:1px solid var(--border2);border-radius:14px;background:var(--surface2);text-align:center;font-weight:900;font-size:1.1rem;transition:.15s}
+    .num:focus{border-color:rgba(255,255,255,.4);background:var(--surface3)}
+    .num:disabled{opacity:.4;cursor:not-allowed}
+    .sep{font-weight:900;font-size:1.3rem;color:var(--muted)}
+    .save-btn{padding:10px 20px;border:1px solid var(--border2);border-radius:999px;background:var(--surface3);font-weight:700;font-size:.85rem;transition:.15s;backdrop-filter:var(--glass)}
+    .save-btn:hover:not(:disabled){background:var(--text);color:var(--bg);border-color:transparent}
+    .save-btn:disabled{opacity:.5;cursor:not-allowed}
+    .save-btn.locked-started{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.25);color:var(--red);font-size:.78rem}
+    .chips{display:flex;gap:6px;flex-wrap:wrap}
+    .chip{padding:5px 11px;border-radius:999px;background:var(--surface2);border:1px solid var(--border);font-size:.75rem;font-weight:600}
+    .chip.correct{background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.3);color:var(--green)}
+    .chip.wrong{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.25);color:var(--red)}
+    .chip.pending{background:var(--surface2);border-color:var(--border);color:var(--muted)}
+    .empty{padding:48px 20px;text-align:center;color:var(--faint);border:1px dashed var(--border2);border-radius:var(--r2);font-size:.88rem}
+    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;z-index:80}
+    .modal-wrap.open{display:flex}
+    .modal{width:min(480px,100%);border-radius:24px;padding:22px;max-height:90dvh;overflow-y:auto;backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);background:rgba(12,12,12,.94);border:1px solid var(--border2)}
+    [data-theme=light] .modal{background:rgba(240,240,236,.96)}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .modal-head h3{font-size:1.1rem;font-weight:800;letter-spacing:-.04em}
+    .leader-row{display:grid;grid-template-columns:36px 1fr auto;gap:12px;padding:14px 0;border-top:1px solid var(--border);align-items:center}
+    .leader-row:first-child{border-top:none}
+    .rank-ico{font-size:1.2rem;text-align:center}
+    .l-name{font-weight:700;font-size:.92rem}
+    .l-picks{font-size:.72rem;color:var(--muted);margin-top:2px}
+    .l-pts{font-size:1.8rem;font-weight:900;letter-spacing:-.06em}
+    .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(90px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:999px;font-size:.85rem;font-weight:700;transition:.22s cubic-bezier(.34,1.56,.64,1);z-index:100;white-space:nowrap;pointer-events:none}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    @media(max-width:640px){.match-grid{grid-template-columns:1fr;gap:10px}.match-center{order:-1}.predict-row{flex-direction:column;align-items:stretch}.save-btn{text-align:center}.inputs{justify-content:center}.hdr-in{height:auto;padding:10px 0;flex-wrap:wrap;gap:8px}}
+  </style>
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <div class="logo">Pishbini Bazi Ha · WC 2026</div>
+    <div class="hdr-btns">
+      <button class="ghost-btn" id="boardBtn">🏆 Leaderboard</button>
+      <button class="ghost-btn" id="themeBtn">◐ Theme</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-label">FIFA World Cup 2026</div>
+    <h1 class="hero-title">Pishbini<br><span>Bazi Ha</span></h1>
+
+    <div class="glass-card notice">
+      <div class="notice-title">Rooye esmet click kon, va badesh pishbini kon bazio. 👆</div>
+      <div class="notice-sub">Ta ghable soote start har bazi mitoni pishbini koni va taghiresh bedi. Baad az start bazi, dige nemishe taghir dad. :D</div>
+    </div>
+
+    <div class="glass-card scoring">
+      <div class="score-rule"><span class="score-badge gold">+3</span> Exact score (gol be gol)</div>
+      <div class="div"></div>
+      <div class="score-rule"><span class="score-badge silver">+1</span> Correct winner / draw</div>
+      <div class="div"></div>
+      <div class="score-rule" style="color:var(--faint)">0 pts — Wrong</div>
+    </div>
+
+    <div class="profiles-wrap">
+      <div class="profiles-label">Choose your name</div>
+      <div class="profiles">
+        <button class="profile-btn active" data-player="HANBA"><span class="ck">✓</span>HANBA</button>
+        <button class="profile-btn" data-player="YASIN BAMBA"><span class="ck">✓</span>YASIN BAMBA</button>
+        <button class="profile-btn" data-player="AMA BAMBA"><span class="ck">✓</span>AMA BAMBA</button>
+        <button class="profile-btn" data-player="KAMBAB"><span class="ck">✓</span>KAMBAB</button>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+  </section>
+
+  <section class="section">
+    <div class="filters-row">
+      <div class="filters">
+        <button class="filter-btn active" data-view="upcoming">Upcoming</button>
+        <button class="filter-btn" data-view="live">🔴 Live</button>
+        <button class="filter-btn" data-view="finished">Finished</button>
+        <button class="filter-btn" data-view="all">All</button>
+      </div>
+      <span class="sec-title" id="secTitle">Upcoming</span>
+    </div>
+    <div style="height:14px"></div>
+    <div class="list" id="list"></div>
+  </section>
+</main>
+
+<div class="modal-wrap" id="leaderModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🏆 Leaderboard</h3>
+      <button class="ghost-btn" id="closeBoard">Close</button>
+    </div>
+    <div id="leaderContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+const cfg = {
+  apiKey:"AIzaSyB3T6VN31aw7bezi7wJh9kBSdTuOdAfHGo",
+  authDomain:"pishbini-bazi-ha.firebaseapp.com",
+  databaseURL:"https://pishbini-bazi-ha-default-rtdb.firebaseio.com",
+  projectId:"pishbini-bazi-ha",
+  storageBucket:"pishbini-bazi-ha.firebasestorage.app",
+  messagingSenderId:"195538591321",
+  appId:"1:195538591321:web:63a099506ee9a1b3a49b48",
+  measurementId:"G-7GTHHG6N3C"
+};
+const fbApp = initializeApp(cfg);
+try { getAnalytics(fbApp); } catch(e) {}
+const db = getDatabase(fbApp);
+
+const PLAYERS = ['HANBA','YASIN BAMBA','AMA BAMBA','KAMBAB'];
+const MEDALS = ['🥇','🥈','🥉','🎖️'];
+const FLAGS = {
+  'Australia':'🇦🇺','Turkey':'🇹🇷','Argentina':'🇦🇷','Chile':'🇨🇱','Brazil':'🇧🇷',
+  'Mexico':'🇲🇽','USA':'🇺🇸','United States':'🇺🇸','Canada':'🇨🇦','Germany':'🇩🇪',
+  'France':'🇫🇷','Spain':'🇪🇸','England':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Portugal':'🇵🇹','Netherlands':'🇳🇱',
+  'Belgium':'🇧🇪','Japan':'🇯🇵','South Korea':'🇰🇷','Iran':'🇮🇷','Saudi Arabia':'🇸🇦',
+  'Morocco':'🇲🇦','Senegal':'🇸🇳','Nigeria':'🇳🇬','Ivory Coast':'🇨🇮','Egypt':'🇪🇬',
+  'Colombia':'🇨🇴','Uruguay':'🇺🇾','Ecuador':'🇪🇨','Peru':'🇵🇪','Venezuela':'🇻🇪',
+  'Paraguay':'🇵🇾','Bolivia':'🇧🇴','Switzerland':'🇨🇭','Croatia':'🇭🇷','Serbia':'🇷🇸',
+  'Ukraine':'🇺🇦','Poland':'🇵🇱','Denmark':'🇩🇰','Austria':'🇦🇹','Slovakia':'🇸🇰',
+  'Tunisia':'🇹🇳','Cameroon':'🇨🇲','Ghana':'🇬🇭','Algeria':'🇩🇿','Mali':'🇲🇱',
+  'Cape Verde':'🇨🇻','New Zealand':'🇳🇿','Qatar':'🇶🇦','Honduras':'🇭🇳','Costa Rica':'🇨🇷',
+  'Panama':'🇵🇦','Iceland':'🇮🇸','Sweden':'🇸🇪','Norway':'🇳🇴','Albania':'🇦🇱',
+  'Slovenia':'🇸🇮','United States of America':'🇺🇸','Wales':'🏴󠁧󠁢󠁷󠁬󠁳󠁿','Scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'Guatemala':'🇬🇹','Jamaica':'🇯🇲','Greece':'🇬🇷','Romania':'🇷🇴','Hungary':'🇭🇺',
+  'Czech Republic':'🇨🇿','Finland':'🇫🇮','New Zealand':'🇳🇿'
+};
+
+const state = {
+  player: 'HANBA', view: 'upcoming',
+  predictions: {}, results: {}, livescores: {}, fixtures: {}
+};
+
+const $ = id => document.getElementById(id);
+const flag = n => FLAGS[n] || '🏳️';
+const toast = msg => {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._tt); window._tt = setTimeout(() => t.classList.remove('show'), 2600);
+};
+
+function parseTs(local_date) {
+  if (!local_date) return 0;
+  const [datePart, timePart] = local_date.split(' ');
+  if (!datePart) return 0;
+  const [mo, da, yr] = datePart.split('/');
+  const [hh, mm] = (timePart || '00:00').split(':');
+  return new Date(+yr, +mo-1, +da, +hh, +mm).getTime();
+}
+
+function isStarted(m) { return Date.now() >= parseTs(m.local_date); }
+function isFinished(m) { return String(m.finished || '').toUpperCase() === 'TRUE'; }
+function isLive(m) { return !isFinished(m) && !!state.livescores?.[m.id]; }
+
+const winDir = (a, b) => a === b ? 0 : a > b ? 1 : -1;
+
+function calcPoints(pl) {
+  let p = 0;
+  Object.entries(state.results).forEach(([id, r]) => {
+    const pr = state.predictions[pl]?.[id];
+    if (!pr) return;
+    if (Number(pr.g1) === Number(r.g1) && Number(pr.g2) === Number(r.g2)) { p += 3; return; }
+    if (winDir(+pr.g1, +pr.g2) === winDir(+r.g1, +r.g2)) p += 1;
+  });
+  return p;
+}
+
+function sortedFixtures() {
+  return Object.values(state.fixtures)
+    .filter(m => m && m.home_name)
+    .sort((a, b) => parseTs(a.local_date) - parseTs(b.local_date));
+}
+
+function visibleMatches() {
+  const all = sortedFixtures();
+  if (state.view === 'live') return all.filter(m => isLive(m));
+  if (state.view === 'finished') return all.filter(m => isFinished(m));
+  if (state.view === 'upcoming') return all.filter(m => !isFinished(m) && !isStarted(m));
+  return all;
+}
+
+function render() { renderProfiles(); renderStats(); renderFilters(); renderList(); renderBoard(); }
+
+function renderProfiles() {
+  document.querySelectorAll('.profile-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.player === state.player);
+    btn.onclick = () => { state.player = btn.dataset.player; render(); };
+  });
+}
+
+function renderStats() {
+  $('statsRow').innerHTML = PLAYERS.map(p =>
+    `<div class="stat-chip">${p.split(' ')[0]} <strong>${calcPoints(p)}</strong></div>`
+  ).join('');
+}
+
+function renderFilters() {
+  const T = { live:'🔴 Live', upcoming:'Upcoming', finished:'Finished', all:'All Matches' };
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === state.view);
+    btn.onclick = () => { state.view = btn.dataset.view; render(); };
+  });
+  $('secTitle').textContent = T[state.view] || state.view;
+}
+
+function renderList() {
+  const root = $('list');
+  const arr = visibleMatches();
+  if (!arr.length) {
+    const msg = { live:'No live games right now — check back during a match!', finished:'No finished matches yet.', upcoming:'No upcoming matches found.' };
+    root.innerHTML = `<div class="empty">${msg[state.view] || 'No matches'} · Try "All"</div>`;
+    return;
+  }
+
+  root.innerHTML = arr.map(m => {
+    const id = String(m.id);
+    const ls = state.livescores?.[id];
+    const result = state.results?.[id];
+    const mine = state.predictions[state.player]?.[id];
+    const finished = isFinished(m);
+    const live = isLive(m);
+    const started = isStarted(m);
+
+    // Center
+    let center = '';
+    if (finished && result) {
+      center = `<div class="match-score ft-score">${result.g1} — ${result.g2}</div>
+        <div class="match-sub"><span class="ft-pill">✓ Full Time</span></div>`;
+    } else if (live && ls) {
+      center = `<div class="match-score live-score">${ls.g1} — ${ls.g2}</div>
+        <div class="match-sub">
+          <span class="live-pill"><span class="live-dot"></span>LIVE</span>
+          ${ls.minute && /^\d+$/.test(String(ls.minute)) ? `<span class="min-tag">${ls.minute}'</span>` : ''}
+        </div>`;
+    } else {
+      const t = (m.local_date || '').split(' ');
+      center = `<div class="match-time-txt">${t[1] || '--:--'}</div>
+        <div class="match-sub">${t[0] || ''}</div>`;
+    }
+
+    // Chips — ALL players' predictions shown
+    const chips = PLAYERS.map(pl => {
+      const pr = state.predictions[pl]?.[id];
+      if (!pr) return '';
+      let cls = 'chip pending';
+      if (result) {
+        const exact = +pr.g1 === +result.g1 && +pr.g2 === +result.g2;
+        const win = winDir(+pr.g1,+pr.g2) === winDir(+result.g1,+result.g2);
+        cls = 'chip ' + (exact ? 'correct' : win ? 'correct' : 'wrong');
+      }
+      return `<span class="${cls}">${pl.split(' ')[0]}: ${pr.g1}–${pr.g2}</span>`;
+    }).join('');
+
+    // Button logic:
+    // - Not started → can always save/update (no lock)
+    // - Started (live or finished) → locked, can't change
+    const canEdit = !started;
+    let btnLabel = '';
+    let btnCls = 'save-btn';
+    if (!canEdit) {
+      btnLabel = mine ? '🔒 Locked' : '🔒 Started';
+      btnCls += ' locked-started';
+    } else {
+      btnLabel = mine ? '✏️ Update' : 'Save Pick';
+    }
+
+    return `<article class="card glass-card ${live ? 'live-card' : ''}">
+      <div class="card-meta">
+        <span>Group ${m.group || '?'} · MD${m.matchday || '?'}</span>
+        <span>${m.local_date || ''}</span>
+      </div>
+      <div class="match-grid">
+        <div class="team"><div class="team-flag">${flag(m.home_name)}</div><div class="team-name">${m.home_name}</div></div>
+        <div class="match-center">${center}</div>
+        <div class="team"><div class="team-flag">${flag(m.away_name)}</div><div class="team-name">${m.away_name}</div></div>
+      </div>
+      <div class="predict">
+        <div class="predict-row">
+          <div class="inputs">
+            <input class="num" id="g1-${id}" type="number" min="0" max="20" placeholder="0" value="${mine != null ? mine.g1 : ''}" ${!canEdit ? 'disabled' : ''}>
+            <span class="sep">–</span>
+            <input class="num" id="g2-${id}" type="number" min="0" max="20" placeholder="0" value="${mine != null ? mine.g2 : ''}" ${!canEdit ? 'disabled' : ''}>
+          </div>
+          <button class="${btnCls}" data-save="${id}" ${!canEdit ? 'disabled' : ''}>${btnLabel}</button>
+        </div>
+        ${chips ? `<div class="chips">${chips}</div>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+
+  root.querySelectorAll('[data-save]:not(:disabled)').forEach(btn =>
+    btn.onclick = () => savePick(btn.dataset.save)
+  );
+}
+
+async function savePick(id) {
+  const m = state.fixtures[id] || state.fixtures[String(id)];
+  if (m && isStarted(m)) { toast('Bazi shoro shode — dige nemishe! 🔒'); return; }
+  const a = $(`g1-${id}`), b = $(`g2-${id}`);
+  if (!a || a.value === '' || b.value === '') { toast('Har do gol ro por kon!'); return; }
+  await set(ref(db, `worldcup/shared/predictions/${state.player}/${id}`), {
+    g1: Number(a.value), g2: Number(b.value), ts: Date.now()
+  });
+  toast(`Saved ✓ — ${state.player}: ${a.value}–${b.value}`);
+}
+
+function renderBoard() {
+  const rows = PLAYERS
+    .map(p => ({ name: p, pts: calcPoints(p), picks: Object.keys(state.predictions[p] || {}).length }))
+    .sort((a, b) => b.pts - a.pts);
+  $('leaderContent').innerHTML = rows.map((r, i) => `
+    <div class="leader-row">
+      <div class="rank-ico">${MEDALS[i] || i+1}</div>
+      <div><div class="l-name">${r.name}</div><div class="l-picks">${r.picks} picks</div></div>
+      <div class="l-pts">${r.pts}</div>
+    </div>`).join('');
+}
+
+$('boardBtn').onclick = () => $('leaderModal').classList.add('open');
+$('closeBoard').onclick = () => $('leaderModal').classList.remove('open');
+$('leaderModal').onclick = e => { if (e.target.id === 'leaderModal') e.currentTarget.classList.remove('open'); };
+$('themeBtn').onclick = () => {
+  const h = document.documentElement;
+  h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+};
+
+onValue(ref(db, 'worldcup/shared'), snap => {
+  const d = snap.val() || {};
+  state.predictions = d.predictions || {};
+  state.results = d.results || {};
+  state.livescores = d.livescores || {};
+  state.fixtures = d.fixtures || {};
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
