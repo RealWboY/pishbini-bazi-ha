@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover" />
+  <title>Pishbini Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#000000;
+      --card:#0a0a0a;
+      --card-hover:#111111;
+      --border:rgba(255,255,255,0.06);
+      --border-light:rgba(255,255,255,0.12);
+      --text:#ffffff;
+      --muted:#888888;
+      --green:#00ff66;
+      --accent:#ffffff;
+      --font:'Inter',system-ui,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;touch-action:manipulation;font-family:var(--font);-webkit-tap-highlight-color:transparent;}
+    html{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;scroll-behavior:smooth;}
+    body{min-height:100vh;padding-bottom:100px;overflow-x:hidden;}
+
+    /* Background Glows */
+    .bg-glow{position:fixed;top:-20%;left:-10%;width:50vw;height:50vw;background:radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);border-radius:50%;pointer-events:none;z-index:0;}
+    .bg-glow:nth-child(2){top:auto;bottom:-20%;left:auto;right:-10%;background:radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);}
+
+    button,input{border:none;background:none;color:inherit;outline:none;}
+    button{cursor:pointer;}
+    .wrap{max-width:800px;margin:0 auto;padding:0 20px;position:relative;z-index:10;}
+
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:80;padding:16px 0;background:rgba(0,0,0,0.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .topbar-in{display:flex;align-items:center;justify-content:space-between;}
+    .brand{font-weight:900;font-size:1.15rem;letter-spacing:-0.04em;}
+    .btn-leader{padding:8px 16px;border-radius:100px;background:var(--border);font-weight:700;font-size:0.85rem;transition:0.2s;}
+    .btn-leader:active{transform:scale(0.95);background:var(--border-light);}
+
+    /* Controls (Players & Filters) */
+    .controls{margin-top:30px;display:flex;flex-direction:column;gap:20px;}
+
+    .segmented{display:flex;background:var(--border);padding:4px;border-radius:16px;overflow-x:auto;scrollbar-width:none;}
+    .segmented::-webkit-scrollbar{display:none;}
+    .seg-item{flex:1;min-width:100px;text-align:center;padding:12px 16px;border-radius:12px;font-size:0.85rem;font-weight:800;color:var(--muted);transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);position:relative;white-space:nowrap;}
+    .seg-item.active{color:#000;background:#fff;box-shadow:0 4px 15px rgba(255,255,255,0.2);}
+    .p-ava{margin-right:6px;font-size:1rem;}
+
+    .filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:10px;}
+    .filters::-webkit-scrollbar{display:none;}
+    .filter{padding:10px 20px;border-radius:100px;border:1px solid var(--border);font-weight:700;font-size:0.85rem;color:var(--muted);transition:all 0.2s;}
+    .filter.active{background:var(--border-light);color:#fff;border-color:var(--border-light);}
+
+    /* Match List */
+    .list{display:flex;flex-direction:column;gap:24px;margin-top:20px;}
+
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+    .match{background:var(--card);border:1px solid var(--border);border-radius:32px;padding:24px;transition:all 0.3s ease;opacity:0;animation:fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
+    .match:hover{background:var(--card-hover);border-color:var(--border-light);}
+    .match.live{border-color:rgba(0,255,102,0.3);box-shadow:0 0 30px rgba(0,255,102,0.05);}
+
+    .meta{display:flex;justify-content:space-between;font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:24px;}
+
+    .score-ui{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;}
+    .team{display:flex;flex-direction:column;align-items:center;flex:1;}
+    .flag{font-size:48px;line-height:1;margin-bottom:12px;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));transition:transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);}
+    .match:hover .flag{transform:scale(1.1) translateY(-4px);}
+    .t-name{font-size:1.1rem;font-weight:800;letter-spacing:-0.03em;}
+
+    .center{display:flex;flex-direction:column;align-items:center;padding:0 20px;}
+    .score-txt{display:flex;align-items:center;gap:16px;font-size:4rem;font-weight:900;line-height:1;letter-spacing:-0.05em;font-variant-numeric:tabular-nums;}
+    .cup{font-size:1.8rem;opacity:0.8;}
+
+    .status{margin-top:12px;font-size:0.9rem;font-weight:800;padding:6px 14px;border-radius:100px;background:var(--border);}
+    .status.live{background:rgba(0,255,102,0.1);color:var(--green);border:1px solid rgba(0,255,102,0.2);}
+    .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulsate 1.5s infinite;}
+    @keyframes pulsate{0%{box-shadow:0 0 0 0 rgba(0,255,102,0.4);}70%{box-shadow:0 0 0 10px rgba(0,255,102,0);}100%{box-shadow:0 0 0 0 rgba(0,255,102,0);}}
+
+    /* Action Area */
+    .action{background:#000;border:1px solid var(--border);border-radius:24px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+    .steppers{display:flex;align-items:center;gap:16px;flex:1;justify-content:center;}
+    .step-group{display:flex;align-items:center;background:var(--card);border-radius:100px;padding:4px;border:1px solid var(--border);}
+    .s-btn{width:44px;height:44px;border-radius:50%;background:var(--border);font-size:1.4rem;font-weight:500;display:flex;align-items:center;justify-content:center;transition:0.2s;}
+    .s-btn:active{transform:scale(0.9);background:var(--border-light);}
+    .s-btn:disabled{opacity:0.3;pointer-events:none;}
+    .s-val{width:40px;text-align:center;font-size:1.5rem;font-weight:900;}
+    .div{color:var(--border-light);font-weight:900;}
+
+    .btn-save{padding:16px 32px;border-radius:100px;background:#fff;color:#000;font-weight:800;font-size:0.95rem;transition:all 0.2s;flex-shrink:0;}
+    .btn-save:active:not(:disabled){transform:scale(0.96);}
+    .btn-save.locked{background:var(--border);color:var(--muted);}
+
+    /* Other Predictions */
+    .chips{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;}
+    .chip{padding:6px 12px;border-radius:100px;background:var(--border);font-size:0.75rem;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px;}
+    .chip.exact{background:#fff;color:#000;}
+    .chip.good{background:rgba(0,255,102,0.15);color:var(--green);}
+
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:100;opacity:0;transition:opacity 0.3s;}
+    .modal-overlay.open{display:flex;opacity:1;}
+    .modal{background:#111;border:1px solid var(--border);border-radius:32px;width:min(440px, 90%);padding:32px;transform:translateY(20px);transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);}
+    .modal-overlay.open .modal{transform:translateY(0);}
+
+    .m-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+    .m-title{font-size:1.4rem;font-weight:900;}
+
+    .l-row{display:flex;align-items:center;padding:16px 0;border-bottom:1px solid var(--border);}
+    .l-row:last-child{border:none;}
+    .l-rank{font-size:1.4rem;width:40px;}
+    .l-info{flex:1;}
+    .l-name{font-size:1.05rem;font-weight:800;}
+    .l-picks{font-size:0.75rem;color:var(--muted);margin-top:4px;font-weight:600;}
+    .l-pts{font-size:2rem;font-weight:900;}
+
+    /* Toast */
+    .toast{position:fixed;top:24px;left:50%;transform:translate(-50%, -100px);background:#fff;color:#000;padding:16px 32px;border-radius:100px;font-weight:800;font-size:0.9rem;box-shadow:0 20px 40px rgba(0,0,0,0.5);transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);z-index:200;}
+    .toast.show{transform:translate(-50%, 0);}
+
+    @media(max-width:640px){
+      .score-txt{font-size:3.2rem;}
+      .flag{font-size:40px;}
+      .action{flex-direction:column;border-radius:28px;}
+      .btn-save{width:100%;}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="bg-glow"></div>
+
+  <header class="topbar">
+    <div class="wrap topbar-in">
+      <div class="brand">Pishbini</div>
+      <button class="btn-leader" id="boardBtn">Leaderboard</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="controls">
+      <div class="segmented" id="playerTabs"></div>
+      <div class="filters">
+        <button class="filter active" data-view="upcoming">Upcoming</button>
+        <button class="filter" data-view="live">Live</button>
+        <button class="filter" data-view="finished">Finished</button>
+        <button class="filter" data-view="all">All</button>
+      </div>
+    </div>
+
+    <section class="list" id="matchList"></section>
+  </main>
+
+  <div class="modal-overlay" id="boardModal">
+    <div class="modal">
+      <div class="m-header">
+        <div class="m-title">Standings</div>
+        <button class="btn-leader" id="closeBoard">Close</button>
+      </div>
+      <div id="leaderRows"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+const app = initializeApp({
+  apiKey:'AIzaSyB3T6VN31aw7bezi7wJh9kBSdTuOdAfHGo',
+  authDomain:'pishbini-bazi-ha.firebaseapp.com',
+  databaseURL:'https://pishbini-bazi-ha-default-rtdb.firebaseio.com',
+  projectId:'pishbini-bazi-ha',
+  storageBucket:'pishbini-bazi-ha.firebasestorage.app',
+  messagingSenderId:'195538591321',
+  appId:'1:195538591321:web:63a099506ee9a1b3a49b48'
+});
+const db = getDatabase(app);
+
+const PLAYERS = [
+  {id:'HANBA',ava:'⚪'},{id:'YASIN BAMBA',ava:'◻️'},{id:'AMA BAMBA',ava:'⬜'},{id:'KAMBAB',ava:'▫️'}
+];
+const FLAGS = {'Argentina':'🇦🇷','Australia':'🇦🇺','Belgium':'🇧🇪','Bolivia':'🇧🇴','Bosnia and Herzegovina':'🇧🇦','Brazil':'🇧🇷','Canada':'🇨🇦','Cameroon':'🇨🇲','Cape Verde':'🇨🇻','Chile':'🇨🇱','Colombia':'🇨🇴','Costa Rica':'🇨🇷','Croatia':'🇭🇷','Czech Republic':'🇨🇿','Denmark':'🇩🇰','Ecuador':'🇪🇨','Egypt':'🇪🇬','England':'🏴','France':'🇫🇷','Germany':'🇩🇪','Ghana':'🇬🇭','Guatemala':'🇬🇹','Honduras':'🇭🇳','Iceland':'🇮🇸','Iran':'🇮🇷','Jamaica':'🇯🇲','Japan':'🇯🇵','Mali':'🇲🇱','Mexico':'🇲🇽','Morocco':'🇲🇦','Netherlands':'🇳🇱','New Zealand':'🇳🇿','Nigeria':'🇳🇬','Norway':'🇳🇴','Panama':'🇵🇦','Paraguay':'🇵🇾','Peru':'🇵🇪','Poland':'🇵🇱','Portugal':'🇵🇹','Qatar':'🇶🇦','Saudi Arabia':'🇸🇦','Scotland':'🏴','Senegal':'🇸🇳','Serbia':'🇷🇸','South Africa':'🇿🇦','South Korea':'🇰🇷','Spain':'🇪🇸','Sweden':'🇸🇪','Switzerland':'🇨🇭','Tunisia':'🇹🇳','Turkey':'🇹🇷','Ukraine':'🇺🇦','United States':'🇺🇸','USA':'🇺🇸','Uruguay':'🇺🇾','Uzbekistan':'🇺🇿','Venezuela':'🇻🇪','Wales':'🏴'};
+
+const state = {player:'HANBA',view:'upcoming',fixtures:{},results:{},livescores:{},predictions:{}};
+const $ = id => document.getElementById(id);
+
+window.stepVal = (id, delta) => {
+  const el = $(id);
+  if(!el || el.disabled) return;
+  let v = parseInt(el.value || 0) + delta;
+  if(v < 0) v = 0; if(v > 20) v = 20;
+  el.value = v;
+  if(navigator.vibrate) navigator.vibrate(10);
+};
+
+function parseRawDate(raw){
+  if(!raw) return null;
+  const s = String(raw).trim();
+  if(!s) return null;
+  const [datePart, timePart='00:00'] = s.split(' ');
+  let y,m,d;
+  if(datePart.includes('/')){
+    const p = datePart.split('/').map(Number);
+    if(p.length !== 3 || p.some(Number.isNaN)) return null;
+    if(String(p[0]).length === 4) [y,m,d] = p; else [m,d,y] = p;
+  } else if(datePart.includes('-')){
+    const p = datePart.split('-').map(Number);
+    if(p.length !== 3 || p.some(Number.isNaN)) return null;
+    [y,m,d] = p;
+  } else return null;
+  const [hh='00', mm='00'] = timePart.split(':');
+  const dt = new Date(Date.UTC(y, m - 1, d, Number(hh), Number(mm), 0));
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+function startTs(m){ const d = parseRawDate(m.local_date); return d ? d.getTime() : 0; }
+function hasStarted(m){ const ts = startTs(m); return ts ? Date.now() >= ts : false; }
+function isFinished(m){ return String(m.finished || '').toUpperCase() === 'TRUE'; }
+function isLive(m){ return !isFinished(m) && !!state.livescores[String(m.id)]; }
+function resultDir(a,b){ return a===b ? 0 : a>b ? 1 : -1; }
+function calcPoints(pid){ let pts=0; Object.entries(state.results || {}).forEach(([id,r])=>{ const p=state.predictions?.[pid]?.[id]; if(!p) return; if(+p.g1===+r.g1 && +p.g2===+r.g2) pts+=3; else if(resultDir(+p.g1,+p.g2)===resultDir(+r.g1,+r.g2)) pts+=1; }); return pts; }
+
+function showToast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(window.__toastTimer); window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+function renderAll(){
+  $('playerTabs').innerHTML = PLAYERS.map(p => `<button class="seg-item ${state.player===p.id?'active':''}" data-player="${p.id}"><span class="p-ava">${p.ava}</span>${p.id.split(' ')[0]}</button>`).join('');
+  document.querySelectorAll('.seg-item').forEach(b => { b.onclick = () => { state.player = b.dataset.player; if(navigator.vibrate) navigator.vibrate(10); renderAll(); }; });
+
+  document.querySelectorAll('.filter').forEach(b => { b.classList.toggle('active', b.dataset.view===state.view); b.onclick = () => { state.view = b.dataset.view; renderAll(); }; });
+
+  const all = Object.values(state.fixtures || {}).filter(m => m && m.home_name && m.away_name);
+  let visible = all;
+  if(state.view === 'upcoming') visible = all.filter(m => !isFinished(m) && !hasStarted(m));
+  if(state.view === 'live') visible = all.filter(m => isLive(m));
+  if(state.view === 'finished') visible = all.filter(m => isFinished(m));
+  visible.sort((a,b) => startTs(a) - startTs(b));
+
+  if(!visible.length){ $('matchList').innerHTML = `<div style="text-align:center;padding:60px;color:#888;font-weight:700;">No matches found.</div>`; updateLeaderboard(); return; }
+
+  $('matchList').innerHTML = visible.map((m, index) => {
+    const id = String(m.id);
+    const live = isLive(m), fin = isFinished(m), started = hasStarted(m);
+    const ls = state.livescores?.[id], res = state.results?.[id], myPred = state.predictions?.[state.player]?.[id];
+    let leftScore='0', rightScore='0', statusUI='';
+
+    if(fin && res){ leftScore = res.g1; rightScore = res.g2; statusUI = `<div class="status">FT</div>`; }
+    else if(live && ls){ leftScore = ls.g1; rightScore = ls.g2; statusUI = `<div class="status live"><span class="pulse"></span>${ls.minute || 'LIVE'}</div>`; }
+    else { statusUI = `<div class="status">Upcoming</div>`; }
+
+    const preds = PLAYERS.map(p => {
+      const pr = state.predictions?.[p.id]?.[id];
+      if(!pr) return '';
+      let cls='chip';
+      if(fin && res){ if(+pr.g1===+res.g1 && +pr.g2===+res.g2) cls+=' exact'; else if(resultDir(+pr.g1,+pr.g2)===resultDir(+res.g1,+res.g2)) cls+=' good'; }
+      return `<div class="${cls}">${p.ava} ${pr.g1}-${pr.g2}</div>`;
+    }).join('');
+
+    return `
+      <div class="match ${live?'live':''}" style="animation-delay:${index * 0.05}s">
+        <div class="meta"><span>Group ${m.group || '-'}</span><span>${started?'Locked':'Open'}</span></div>
+        <div class="score-ui">
+          <div class="team"><div class="flag">${FLAGS[m.home_name] || '🏳️'}</div><div class="t-name">${m.home_name}</div></div>
+          <div class="center"><div class="score-txt"><span>${leftScore}</span><span class="cup">🏆</span><span>${rightScore}</span></div>${statusUI}</div>
+          <div class="team"><div class="flag">${FLAGS[m.away_name] || '🏳️'}</div><div class="t-name">${m.away_name}</div></div>
+        </div>
+        <div class="action">
+          <div class="steppers">
+            <div class="step-group"><button class="s-btn" onclick="window.stepVal('g1-${id}',-1)" ${started?'disabled':''}>−</button><input id="g1-${id}" class="s-val" type="number" value="${myPred?.g1 ?? 0}" readonly ${started?'disabled':''}><button class="s-btn" onclick="window.stepVal('g1-${id}',1)" ${started?'disabled':''}>+</button></div>
+            <div class="div">:</div>
+            <div class="step-group"><button class="s-btn" onclick="window.stepVal('g2-${id}',-1)" ${started?'disabled':''}>−</button><input id="g2-${id}" class="s-val" type="number" value="${myPred?.g2 ?? 0}" readonly ${started?'disabled':''}><button class="s-btn" onclick="window.stepVal('g2-${id}',1)" ${started?'disabled':''}>+</button></div>
+          </div>
+          <button class="btn-save ${started?'locked':''}" data-id="${id}" ${started?'disabled':''}>${started?'Locked':'Save Pick'}</button>
+        </div>
+        ${preds ? `<div class="chips">${preds}</div>` : ''}
+      </div>`;
+  }).join('');
+
+  document.querySelectorAll('.btn-save:not(:disabled)').forEach(b => {
+    b.onclick = async () => {
+      const id = b.dataset.id;
+      const v1 = $(`g1-${id}`).value, v2 = $(`g2-${id}`).value;
+      if(navigator.vibrate) navigator.vibrate([20,30,20]);
+      b.textContent = 'Saving...';
+      await set(ref(db, `worldcup/shared/predictions/${state.player}/${id}`), { g1:+v1, g2:+v2, ts:Date.now() });
+      b.textContent = 'Saved ✓';
+      setTimeout(() => { b.textContent = 'Save Pick'; }, 1500);
+      showToast(`${state.player.split(' ')[0]}: ${v1} - ${v2} saved`);
+    };
+  });
+  updateLeaderboard();
+}
+
+function updateLeaderboard(){
+  const ranks = PLAYERS.map(p => ({ name:p.id, ava:p.ava, pts:calcPoints(p.id), picks:Object.keys(state.predictions?.[p.id] || {}).length }))
+    .sort((a,b) => b.pts - a.pts || b.picks - a.picks);
+  $('leaderRows').innerHTML = ranks.map((r,i) => `<div class="l-row"><div class="l-rank">${i===0?'👑':i+1}</div><div class="l-info"><div class="l-name">${r.ava} ${r.name}</div><div class="l-picks">${r.picks} Picks</div></div><div class="l-pts">${r.pts}</div></div>`).join('');
+}
+
+$('boardBtn').onclick = () => $('boardModal').classList.add('open');
+$('closeBoard').onclick = () => $('boardModal').classList.remove('open');
+$('boardModal').onclick = e => { if(e.target.id === 'boardModal') e.currentTarget.classList.remove('open'); };
+
+onValue(ref(db, 'worldcup/shared'), snap => {
+  const d = snap.val() || {};
+  state.fixtures = d.fixtures || {};
+  state.results = d.results || {};
+  state.livescores = d.livescores || {};
+  state.predictions = d.predictions || {};
+  renderAll();
+});
+</script>
+</body>
+</html>
