@@ -1,9 +1,11 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="fa" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Pishbini Bazi Ha</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <title>Pishbini Bazi Ha - Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,112 +13,158 @@
     :root{
       --bg:#070a1a;
       --text:#f7f7f5;
-      --muted:rgba(247,247,245,.66);
+      --muted:rgba(247,247,245,.5);
       --green:#4ade80;
       --red:#ff5f77;
-      --blur:blur(22px) saturate(180%);
+      --gold:#ffd700;
+      --blur:blur(24px) saturate(180%);
       --font:'Inter',system-ui,sans-serif;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
+    *{box-sizing:border-box;margin:0;padding:0;touch-action:manipulation;}
     html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
     body{
       min-height:100vh;
       font-family:var(--font);
       color:var(--text);
-      background: linear-gradient(135deg, #5b2bbd 0%, #3c458f 32%, #147b8a 72%, #0aaeb3 100%);
+      background: linear-gradient(135deg, #2b125a 0%, #1a1e4a 32%, #0b4550 72%, #065b5e 100%);
       background-attachment: fixed;
+      padding-bottom: 90px;
     }
     button,input{font:inherit;color:inherit;border:none;background:none;outline:none}
-    button{cursor:pointer}
+    button{cursor:pointer; -webkit-tap-highlight-color:transparent;}
     .wrap{max-width:1040px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
     
     .topbar{
       position:sticky;top:0;z-index:60;
       padding:14px 0;
       backdrop-filter:var(--blur);
-      background:rgba(8,11,27,.2);
-      border-bottom:1px solid rgba(255,255,255,.10);
+      background:rgba(8,11,27,.3);
+      border-bottom:1px solid rgba(255,255,255,.05);
     }
     .topbar-in{display:flex;align-items:center;justify-content:space-between;}
-    .brand{font-weight:800;letter-spacing:-.03em;}
-    .ghost{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.15);font-weight:700;font-size:.85rem;backdrop-filter:var(--blur);}
+    .brand{font-weight:900;letter-spacing:-.04em;font-size:1.1rem; text-shadow: 0 0 10px rgba(255,255,255,0.3);}
+    .ghost{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.15);font-weight:800;font-size:.85rem;backdrop-filter:var(--blur);transition:0.2s;box-shadow:0 4px 15px rgba(0,0,0,0.2);}
+    .ghost:active{transform:scale(0.95);}
 
-    .hero{padding:40px 0 20px;}
-    .hero h1{font-size:clamp(2.5rem, 5vw, 4.5rem);font-weight:900;line-height:.9;letter-spacing:-.06em;}
-    .players{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap;}
-    .player{padding:12px 20px;border-radius:18px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);font-weight:800;backdrop-filter:var(--blur);transition:.2s;}
-    .player.active{background:rgba(255,255,255,.25);border-color:#fff;transform:translateY(-2px);}
+    .hero{padding:30px 0 20px;}
+    .hero h1{font-size:clamp(2.5rem, 5vw, 4.5rem);font-weight:900;line-height:.9;letter-spacing:-.06em;background:linear-gradient(to right, #fff, #a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
     
-    .filters{margin-top:30px;display:flex;gap:8px;padding-bottom:15px;}
-    .filter{padding:10px 18px;border-radius:999px;background:rgba(255,255,255,.1);font-weight:700;font-size:.85rem;}
-    .filter.active{background:#fff;color:#000;}
+    .players{margin-top:25px;display:flex;gap:10px;flex-wrap:wrap;}
+    .player{display:flex;align-items:center;gap:6px;padding:12px 18px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);font-weight:800;backdrop-filter:var(--blur);transition:.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+    .player.active{background:rgba(255,255,255,.2);border-color:#fff;transform:translateY(-4px) scale(1.05);box-shadow:0 10px 25px rgba(0,0,0,.3);}
+    .p-ava{font-size:1.2rem;}
 
-    .list{display:grid;gap:20px;padding-bottom:60px;}
+    .filters{margin-top:30px;display:flex;gap:10px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none;}
+    .filters::-webkit-scrollbar{display:none;}
+    .filter{padding:10px 20px;border-radius:999px;background:rgba(255,255,255,.08);font-weight:800;font-size:.85rem;white-space:nowrap;transition:0.2s;}
+    .filter.active{background:#fff;color:#000;box-shadow:0 0 15px rgba(255,255,255,0.4);}
+
+    .list{display:grid;gap:25px;padding-top:10px;}
     
-    /* MATCH CARD - MATCHING YOUR IMAGE */
+    /* MATCH CARD */
     .match{
-      background:linear-gradient(135deg, rgba(62,69,114,.6), rgba(39,52,78,.6));
-      border-radius:24px;
+      background:linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      border-radius:28px;
       padding:24px;
-      box-shadow:0 15px 40px rgba(0,0,0,.2);
+      box-shadow:0 15px 35px rgba(0,0,0,.3);
       backdrop-filter:var(--blur);
       border:1px solid rgba(255,255,255,.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .match.live{box-shadow:0 0 0 1px rgba(74,222,128,.3), 0 15px 40px rgba(0,0,0,.2);}
     
-    .meta{display:flex;justify-content:space-between;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.6);margin-bottom:20px;}
+    /* LIVE PULSE ANIMATION */
+    @keyframes heartbeat {
+      0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5), 0 15px 35px rgba(0,0,0,.3); }
+      70% { box-shadow: 0 0 0 15px rgba(74,222,128,0), 0 15px 35px rgba(0,0,0,.3); }
+      100% { box-shadow: 0 0 0 0 rgba(74,222,128,0), 0 15px 35px rgba(0,0,0,.3); }
+    }
+    .match.live{
+      animation: heartbeat 2s infinite;
+      border-color: rgba(74,222,128,.5);
+      background:linear-gradient(145deg, rgba(74,222,128,.08), rgba(255,255,255,.02));
+    }
+    
+    .meta{display:flex;justify-content:space-between;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:20px;}
     
     .score-area{display:flex;align-items:center;justify-content:space-between;}
     .team-col{display:flex;flex-direction:column;align-items:center;width:30%;}
-    .flag-img{width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,.2);}
-    .team-name{font-size:1.1rem;font-weight:600;}
+    .flag-wrap{font-size:3.5rem;line-height:1;margin-bottom:12px;filter:drop-shadow(0 10px 15px rgba(0,0,0,.4));}
+    .team-name{font-size:1.15rem;font-weight:800;text-align:center;}
     
     .center-col{display:flex;flex-direction:column;align-items:center;width:40%;}
-    .score-row{display:flex;align-items:center;gap:20px;font-size:3.5rem;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;}
-    .vs-cup{font-size:2rem;opacity:0.8;}
+    .score-row{display:flex;align-items:center;gap:15px;font-size:3.8rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1;text-shadow:0 10px 20px rgba(0,0,0,.4);}
+    .vs-cup{font-size:2.2rem;filter:drop-shadow(0 5px 10px rgba(0,0,0,.5));}
     
-    .time-status{margin-top:15px;font-size:1.2rem;font-weight:700;color:var(--green);}
-    .time-status.upcoming{color:rgba(255,255,255,.8);font-size:1rem;}
+    .time-status{margin-top:15px;font-size:1.2rem;font-weight:900;color:var(--green);text-shadow: 0 0 10px rgba(74,222,128,0.4);}
+    .time-status.upcoming{color:var(--muted);font-size:1.1rem;text-shadow:none;}
+    .time-status.finished{color:#a5b4fc;font-size:1.1rem;text-shadow:none;}
     
-    /* PREDICT AREA */
-    .predict{margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);}
-    .entry{display:flex;align-items:center;justify-content:space-between;gap:15px;background:rgba(0,0,0,.15);padding:15px;border-radius:18px;}
-    .inputs{display:flex;align-items:center;gap:12px;}
-    .box{width:60px;height:50px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);text-align:center;font-size:1.3rem;font-weight:800;color:#fff;}
-    .box:focus{background:rgba(255,255,255,.2);border-color:#fff;}
-    .box:disabled{opacity:0.5;}
-    .dash{font-weight:900;color:rgba(255,255,255,.5);}
-    .save{padding:14px 24px;border-radius:12px;background:rgba(255,255,255,.2);font-weight:800;transition:.2s;}
-    .save:hover:not(:disabled){background:#fff;color:#000;}
-    .save.locked{background:rgba(255,95,119,.15);color:#ffc4cc;}
+    /* PREDICT AREA - GAMIFIED */
+    .predict{margin-top:25px;padding-top:25px;border-top:1px dashed rgba(255,255,255,.15);}
+    .entry{display:flex;align-items:center;justify-content:space-between;gap:15px;background:rgba(0,0,0,.25);padding:12px;border-radius:24px;box-shadow:inset 0 4px 10px rgba(0,0,0,.3);}
     
-    .all-preds{margin-top:15px;display:flex;gap:8px;flex-wrap:wrap;}
-    .pred-tag{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);font-size:.8rem;font-weight:700;color:var(--muted);}
-    .pred-tag.good{color:#4ade80;background:rgba(74,222,128,.15);}
+    /* Stepper Buttons */
+    .stepper-group{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border-radius:18px;padding:4px;border:1px solid rgba(255,255,255,.1);}
+    .step-btn{width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.1);color:#fff;font-size:1.5rem;font-weight:900;display:flex;align-items:center;justify-content:center;transition:.1s;}
+    .step-btn:active{background:rgba(255,255,255,.3);transform:scale(0.9);}
+    .step-btn:disabled{opacity:0.3;transform:none;}
+    
+    .box{width:36px;text-align:center;font-size:1.5rem;font-weight:900;color:#fff;background:transparent;border:none;}
+    .dash{font-weight:900;color:rgba(255,255,255,.3);font-size:1.5rem;}
+    
+    .save{padding:16px 24px;border-radius:18px;background:linear-gradient(135deg, #4ade80, #10b981);color:#000;font-weight:900;font-size:1rem;transition:.2s;box-shadow:0 8px 20px rgba(16,185,129,.4);}
+    .save:active:not(:disabled){transform:scale(0.92);box-shadow:0 4px 10px rgba(16,185,129,.4);}
+    .save:disabled{background:rgba(255,255,255,.1);color:var(--muted);box-shadow:none;}
+    .save.locked{background:rgba(255,95,119,.15);color:#ff5f77;box-shadow:none;}
+    
+    /* Trash Talk Area (Predictions) */
+    .all-preds{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;}
+    .pred-tag{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:.85rem;font-weight:800;color:var(--muted);transition:0.3s;}
+    .pred-tag .ava{font-size:1.1rem;}
+    
+    @keyframes glowGold {
+      0% { box-shadow: 0 0 5px rgba(255,215,0,0.5); }
+      50% { box-shadow: 0 0 20px rgba(255,215,0,0.8); }
+      100% { box-shadow: 0 0 5px rgba(255,215,0,0.5); }
+    }
+    .pred-tag.exact{color:#ffd700;background:rgba(255,215,0,.15);border-color:#ffd700;animation: glowGold 2s infinite;transform:scale(1.05);}
+    .pred-tag.good{color:#4ade80;background:rgba(74,222,128,.15);border-color:#4ade80;}
+    .pred-tag.bad{opacity:0.6;}
 
-    /* MODAL & TOAST */
-    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:90;}
-    .modal-wrap.open{display:flex;}
-    .modal{width:min(480px,90%);background:rgba(30,35,55,.9);padding:24px;border-radius:24px;border:1px solid rgba(255,255,255,.1);}
-    .leader-row{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);}
-    .pts{margin-left:auto;font-size:1.5rem;font-weight:900;}
-    .toast{position:fixed;bottom:30px;left:50%;transform:translate(-50%,100px);background:#fff;color:#000;padding:12px 24px;border-radius:999px;font-weight:800;transition:.3s;z-index:100;opacity:0;}
+    /* MODAL */
+    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:100;opacity:0;transition: opacity 0.3s ease;}
+    .modal-wrap.open{display:flex;opacity:1;}
+    .modal{width:min(480px,90%);background:linear-gradient(135deg, #1e2345, #11152c);padding:30px;border-radius:32px;border:1px solid rgba(255,255,255,.1);box-shadow:0 25px 50px rgba(0,0,0,.5);transform:translateY(30px);transition:transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+    .modal-wrap.open .modal{transform:translateY(0);}
+    
+    .leader-row{display:flex;align-items:center;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05);position:relative;}
+    .leader-row:last-child{border-bottom:none;}
+    .l-rank{font-size:1.5rem;width:40px;text-align:center;}
+    .l-info{margin-left:15px;}
+    .l-name{font-size:1.1rem;font-weight:900;}
+    .l-picks{font-size:.8rem;color:var(--muted);font-weight:700;}
+    .pts{margin-left:auto;font-size:2rem;font-weight:900;text-shadow:0 4px 10px rgba(0,0,0,.3);}
+    .leader-row.first .l-name{color:#ffd700;}
+    .leader-row.first .pts{color:#ffd700;}
+    
+    /* TOAST */
+    .toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-100px);background:linear-gradient(135deg, #4ade80, #10b981);color:#000;padding:14px 28px;border-radius:999px;font-weight:900;font-size:1rem;transition:.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);z-index:200;opacity:0;box-shadow:0 10px 25px rgba(16,185,129,.4);}
     .toast.show{transform:translate(-50%,0);opacity:1;}
     
     @media(max-width:600px){
-      .score-row{font-size:2.8rem;gap:15px;}
-      .flag-img{width:48px;height:48px;}
+      .score-row{font-size:3rem;gap:12px;}
+      .flag-wrap{font-size:2.8rem;}
       .entry{flex-direction:column;align-items:stretch;}
-      .save{text-align:center;}
-      .inputs{justify-content:center;}
+      .save{text-align:center;padding:18px;}
+      .stepper-group{justify-content:space-between;width:100%;}
     }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="wrap topbar-in">
-      <div class="brand">Pishbini Bazi Ha</div>
-      <button class="ghost" id="boardBtn">🏆 Leaderboard</button>
+      <div class="brand">🏆 Pishbini Pro</div>
+      <button class="ghost" id="boardBtn">👑 Leaderboard</button>
     </div>
   </header>
 
@@ -124,18 +172,15 @@
     <section class="hero">
       <h1>Pishbini<br>Bazi Ha</h1>
       
-      <div class="players">
-        <button class="player active" data-player="HANBA">HANBA</button>
-        <button class="player" data-player="YASIN BAMBA">YASIN BAMBA</button>
-        <button class="player" data-player="AMA BAMBA">AMA BAMBA</button>
-        <button class="player" data-player="KAMBAB">KAMBAB</button>
+      <div class="players" id="playerTabs">
+        <!-- Rendered via JS -->
       </div>
 
       <div class="filters">
-        <button class="filter active" data-view="upcoming">Upcoming</button>
-        <button class="filter" data-view="live">🔴 Live</button>
-        <button class="filter" data-view="finished">Finished</button>
-        <button class="filter" data-view="all">All</button>
+        <button class="filter active" data-view="upcoming">Upcoming 🕒</button>
+        <button class="filter" data-view="live">Live 🔴</button>
+        <button class="filter" data-view="finished">Finished ✅</button>
+        <button class="filter" data-view="all">All 🌍</button>
       </div>
     </section>
 
@@ -144,9 +189,9 @@
 
   <div class="modal-wrap" id="boardModal">
     <div class="modal">
-      <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
-        <h2>Leaderboard</h2>
-        <button class="ghost" id="closeBoard">Close</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2 style="font-weight:900;font-size:1.5rem;">👑 Leaderboard</h2>
+        <button class="ghost" id="closeBoard" style="background:rgba(255,255,255,.1);">Close</button>
       </div>
       <div id="leaderRows"></div>
     </div>
@@ -163,14 +208,20 @@ const app = initializeApp({
 });
 const db = getDatabase(app);
 
-const PLAYERS = ['HANBA','YASIN BAMBA','AMA BAMBA','KAMBAB'];
+// GAMIFICATION DATA
+const PLAYERS = [
+  {id: 'HANBA', ava: '🦅'},
+  {id: 'YASIN BAMBA', ava: '🦁'},
+  {id: 'AMA BAMBA', ava: '🐺'},
+  {id: 'KAMBAB', ava: '🦍'}
+];
+
 const state = { player:'HANBA', view:'upcoming', fixtures:{}, results:{}, livescores:{}, predictions:{} };
 const $ = id => document.getElementById(id);
 
 // --- TEHRAN TIME LOGIC ---
 function getIranStrings(match) {
   if(!match.local_date) return { time:'00:00', date:'--/--' };
-  // Using direct formatting to Iran Time
   const d = new Date(match.local_date.replace(' ', 'T') + 'Z'); 
   const time = new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Tehran', hour:'2-digit', minute:'2-digit'}).format(d);
   const date = new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Tehran', month:'short', day:'numeric'}).format(d);
@@ -182,21 +233,62 @@ function hasStarted(match) { return Date.now() >= startTs(match); }
 function isFinished(match) { return String(match.finished||'').toUpperCase() === 'TRUE'; }
 function isLive(match) { return !isFinished(match) && !!state.livescores[match.id]; }
 
-// Flag generation (using emoji for now to match UI shape quickly)
+// EMOJI FLAGS
 function getFlag(name) {
   const flags = {'Sweden':'🇸🇪','Tunisia':'🇹🇳','Spain':'🇪🇸','Cape Verde':'🇨🇻','Brazil':'🇧🇷'};
   return flags[name] || '🏳️';
 }
 
+// MAKE STEPPER GLOBAL
+window.stepVal = (id, delta) => {
+  const el = $(id);
+  if(el.disabled) return;
+  let v = parseInt(el.value || 0) + delta;
+  if(v < 0) v = 0;
+  if(v > 20) v = 20;
+  el.value = v;
+  // Haptic feedback for interaction
+  if(navigator.vibrate) navigator.vibrate(15);
+};
+
+function getPlayerAva(name) {
+  return PLAYERS.find(p => p.id === name)?.ava || '👤';
+}
+
+function calcPoints(player) {
+  let pts = 0;
+  Object.entries(state.results).forEach(([id, r]) => {
+    const p = state.predictions[player]?.[id];
+    if(!p) return;
+    if(+p.g1 === +r.g1 && +p.g2 === +r.g2) pts += 3;
+    else if((p.g1 === p.g2 && r.g1 === r.g2) || (p.g1 > p.g2 && r.g1 > r.g2) || (p.g1 < p.g2 && r.g1 < r.g2)) pts += 1;
+  });
+  return pts;
+}
+
 function renderAll() {
+  // RENDER PLAYER TABS
+  $('playerTabs').innerHTML = PLAYERS.map(p => `
+    <button class="player ${state.player === p.id ? 'active' : ''}" data-player="${p.id}">
+      <span class="p-ava">${p.ava}</span> ${p.id.split(' ')[0]}
+    </button>
+  `).join('');
+  
   document.querySelectorAll('.player').forEach(b => {
-    b.classList.toggle('active', b.dataset.player === state.player);
-    b.onclick = () => { state.player = b.dataset.player; renderAll(); };
+    b.onclick = () => { 
+      state.player = b.dataset.player; 
+      if(navigator.vibrate) navigator.vibrate(20);
+      renderAll(); 
+    };
   });
   
   document.querySelectorAll('.filter').forEach(b => {
     b.classList.toggle('active', b.dataset.view === state.view);
-    b.onclick = () => { state.view = b.dataset.view; renderAll(); };
+    b.onclick = () => { 
+      state.view = b.dataset.view; 
+      if(navigator.vibrate) navigator.vibrate(20);
+      renderAll(); 
+    };
   });
 
   const all = Object.values(state.fixtures).filter(m=>m&&m.home_name);
@@ -214,24 +306,32 @@ function renderAll() {
     
     let g1='0', g2='0', statusUI='';
     if(fin && res) {
-      g1=res.g1; g2=res.g2; statusUI=`<div class="time-status upcoming">FT</div>`;
+      g1=res.g1; g2=res.g2; statusUI=`<div class="time-status finished">FT ✅</div>`;
     } else if(live && ls) {
-      g1=ls.g1; g2=ls.g2; statusUI=`<div class="time-status">${ls.minute||'LIVE'}</div>`;
+      g1=ls.g1; g2=ls.g2; statusUI=`<div class="time-status">${ls.minute||'LIVE'} 🔴</div>`;
     } else {
       statusUI=`<div class="time-status upcoming">${tz.time}</div>`;
     }
 
     const preds = PLAYERS.map(p => {
-      const pr = state.predictions[p]?.[id];
-      return pr ? `<span class="pred-tag">${p.split(' ')[0]}: ${pr.g1}-${pr.g2}</span>` : '';
+      const pr = state.predictions[p.id]?.[id];
+      if(!pr) return '';
+      let cls = 'pred-tag';
+      if(fin && res) {
+        if(+pr.g1 === +res.g1 && +pr.g2 === +res.g2) cls += ' exact';
+        else if((pr.g1===pr.g2 && res.g1===res.g2) || (pr.g1>pr.g2 && res.g1>res.g2) || (pr.g1<pr.g2 && res.g1<res.g2)) cls += ' good';
+        else cls += ' bad';
+      }
+      const icon = cls.includes('exact') ? '🔥' : (cls.includes('good') ? '✓' : p.ava);
+      return `<div class="${cls}"><span class="ava">${icon}</span> ${pr.g1}-${pr.g2}</div>`;
     }).join('');
 
     return `
       <div class="match ${live?'live':''}">
-        <div class="meta"><span>Group ${m.group||'-'}</span><span>${tz.date} (IRAN)</span></div>
+        <div class="meta"><span>GROUP ${m.group||'-'}</span><span>${tz.date} (IRAN)</span></div>
         <div class="score-area">
           <div class="team-col">
-            <div style="font-size:3.5rem;line-height:1;margin-bottom:10px">${getFlag(m.home_name)}</div>
+            <div class="flag-wrap">${getFlag(m.home_name)}</div>
             <div class="team-name">${m.home_name}</div>
           </div>
           <div class="center-col">
@@ -239,23 +339,29 @@ function renderAll() {
             ${statusUI}
           </div>
           <div class="team-col">
-            <div style="font-size:3.5rem;line-height:1;margin-bottom:10px">${getFlag(m.away_name)}</div>
+            <div class="flag-wrap">${getFlag(m.away_name)}</div>
             <div class="team-name">${m.away_name}</div>
           </div>
         </div>
         
         <div class="predict">
           <div class="entry">
-            <div class="inputs">
-              <input id="g1-${id}" class="box" type="number" value="${myPred?.g1||''}" ${started?'disabled':''}>
-              <span class="dash">-</span>
-              <input id="g2-${id}" class="box" type="number" value="${myPred?.g2||''}" ${started?'disabled':''}>
+            <div class="stepper-group">
+              <button class="step-btn" onclick="window.stepVal('g1-${id}', -1)" ${started?'disabled':''}>-</button>
+              <input id="g1-${id}" class="box" type="number" value="${myPred?.g1||'0'}" readonly ${started?'disabled':''}>
+              <button class="step-btn" onclick="window.stepVal('g1-${id}', 1)" ${started?'disabled':''}>+</button>
+            </div>
+            <span class="dash">-</span>
+            <div class="stepper-group">
+              <button class="step-btn" onclick="window.stepVal('g2-${id}', -1)" ${started?'disabled':''}>-</button>
+              <input id="g2-${id}" class="box" type="number" value="${myPred?.g2||'0'}" readonly ${started?'disabled':''}>
+              <button class="step-btn" onclick="window.stepVal('g2-${id}', 1)" ${started?'disabled':''}>+</button>
             </div>
             <button class="save ${started?'locked':''}" data-id="${id}" ${started?'disabled':''}>
               ${started ? '🔒 Locked' : 'Save Pick'}
             </button>
           </div>
-          <div class="all-preds">${preds}</div>
+          ${preds ? `<div class="all-preds">${preds}</div>` : ''}
         </div>
       </div>
     `;
@@ -265,16 +371,40 @@ function renderAll() {
     b.onclick = async () => {
       const id = b.dataset.id;
       const v1 = $(`g1-${id}`).value, v2 = $(`g2-${id}`).value;
-      if(!v1 || !v2) return showToast('Fill both inputs!');
+      if(navigator.vibrate) navigator.vibrate([50, 50, 50]); // Success vibration
+      b.innerHTML = 'Saving...';
       await set(ref(db, `worldcup/shared/predictions/${state.player}/${id}`), {g1:+v1, g2:+v2});
-      showToast('Saved ✓');
+      b.innerHTML = 'Saved ✓';
+      setTimeout(()=> { b.innerHTML = 'Save Pick'; }, 2000);
+      showToast(`${state.player} Pick: ${v1} - ${v2} 🔥`);
     };
   });
 }
 
+// LEADERBOARD RENDER
+function updateLeaderboard() {
+  const ranks = PLAYERS.map(p => ({
+    name: p.id,
+    ava: p.ava,
+    pts: calcPoints(p.id),
+    picks: Object.keys(state.predictions[p.id]||{}).length
+  })).sort((a,b) => b.pts - a.pts || b.picks - a.picks);
+
+  $('leaderRows').innerHTML = ranks.map((r, i) => `
+    <div class="leader-row ${i===0?'first':''}">
+      <div class="l-rank">${i===0?'👑':(i+1)}</div>
+      <div class="l-info">
+        <div class="l-name">${r.ava} ${r.name}</div>
+        <div class="l-picks">${r.picks} Picks</div>
+      </div>
+      <div class="pts">${r.pts}</div>
+    </div>
+  `).join('');
+}
+
 function showToast(m) {
   const t = $('toast'); t.textContent = m; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2000);
+  setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
 onValue(ref(db, 'worldcup/shared'), s => {
@@ -282,10 +412,17 @@ onValue(ref(db, 'worldcup/shared'), s => {
   state.fixtures = d.fixtures||{}; state.results = d.results||{};
   state.livescores = d.livescores||{}; state.predictions = d.predictions||{};
   renderAll();
+  updateLeaderboard();
 });
 
-$('boardBtn').onclick=()=>$('boardModal').classList.add('open');
+$('boardBtn').onclick=()=>{
+  updateLeaderboard();
+  $('boardModal').classList.add('open');
+};
 $('closeBoard').onclick=()=>$('boardModal').classList.remove('open');
 </script>
 </body>
-</html>
+</html>'''
+
+Path('output/index.html').write_text(html, encoding='utf-8')
+print('saved', Path('output/index.html').stat().st_size)
