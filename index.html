@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <title>Pishbini Bazi Ha - Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#070a1a;
+      --text:#f7f7f5;
+      --muted:rgba(247,247,245,.5);
+      --green:#4ade80;
+      --red:#ff5f77;
+      --gold:#ffd700;
+      --blur:blur(24px) saturate(180%);
+      --font:'Inter',system-ui,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;touch-action:manipulation;}
+    html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      font-family:var(--font);
+      color:var(--text);
+      background: linear-gradient(135deg, #2b125a 0%, #1a1e4a 32%, #0b4550 72%, #065b5e 100%);
+      background-attachment: fixed;
+      padding-bottom: 90px;
+    }
+    button,input{font:inherit;color:inherit;border:none;background:none;outline:none}
+    button{cursor:pointer; -webkit-tap-highlight-color:transparent;}
+    .wrap{max-width:1040px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
+    .topbar{
+      position:sticky;top:0;z-index:60;
+      padding:14px 0;
+      backdrop-filter:var(--blur);
+      background:rgba(8,11,27,.3);
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .topbar-in{display:flex;align-items:center;justify-content:space-between;}
+    .brand{font-weight:900;letter-spacing:-.04em;font-size:1.1rem;text-shadow:0 0 10px rgba(255,255,255,0.3);}
+    .ghost{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.15);font-weight:800;font-size:.85rem;backdrop-filter:var(--blur);transition:0.2s;box-shadow:0 4px 15px rgba(0,0,0,0.2);}
+    .ghost:active{transform:scale(0.95);}
+    .hero{padding:30px 0 20px;}
+    .hero h1{font-size:clamp(2.5rem,5vw,4.5rem);font-weight:900;line-height:.9;letter-spacing:-.06em;background:linear-gradient(to right,#fff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .players{margin-top:25px;display:flex;gap:10px;flex-wrap:wrap;}
+    .player{display:flex;align-items:center;gap:6px;padding:12px 18px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);font-weight:800;backdrop-filter:var(--blur);transition:.3s cubic-bezier(0.175,0.885,0.32,1.275);}
+    .player.active{background:rgba(255,255,255,.2);border-color:#fff;transform:translateY(-4px) scale(1.05);box-shadow:0 10px 25px rgba(0,0,0,.3);}
+    .p-ava{font-size:1.2rem;}
+    .filters{margin-top:30px;display:flex;gap:10px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none;}
+    .filters::-webkit-scrollbar{display:none;}
+    .filter{padding:10px 20px;border-radius:999px;background:rgba(255,255,255,.08);font-weight:800;font-size:.85rem;white-space:nowrap;transition:0.2s;}
+    .filter.active{background:#fff;color:#000;box-shadow:0 0 15px rgba(255,255,255,0.4);}
+    .list{display:grid;gap:25px;padding-top:10px;}
+    .match{
+      background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+      border-radius:28px;padding:24px;
+      box-shadow:0 15px 35px rgba(0,0,0,.3);
+      backdrop-filter:var(--blur);
+      border:1px solid rgba(255,255,255,.1);
+      transition:transform 0.3s ease,box-shadow 0.3s ease;
+    }
+    @keyframes heartbeat{
+      0%{box-shadow:0 0 0 0 rgba(74,222,128,0.5),0 15px 35px rgba(0,0,0,.3);}
+      70%{box-shadow:0 0 0 15px rgba(74,222,128,0),0 15px 35px rgba(0,0,0,.3);}
+      100%{box-shadow:0 0 0 0 rgba(74,222,128,0),0 15px 35px rgba(0,0,0,.3);}
+    }
+    .match.live{
+      animation:heartbeat 2s infinite;
+      border-color:rgba(74,222,128,.5);
+      background:linear-gradient(145deg,rgba(74,222,128,.08),rgba(255,255,255,.02));
+    }
+    .meta{display:flex;justify-content:space-between;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:20px;}
+    .score-area{display:flex;align-items:center;justify-content:space-between;}
+    .team-col{display:flex;flex-direction:column;align-items:center;width:30%;}
+    .flag-wrap{font-size:3.5rem;line-height:1;margin-bottom:12px;filter:drop-shadow(0 10px 15px rgba(0,0,0,.4));}
+    .team-name{font-size:1.15rem;font-weight:800;text-align:center;}
+    .center-col{display:flex;flex-direction:column;align-items:center;width:40%;}
+    .score-row{display:flex;align-items:center;gap:15px;font-size:3.8rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1;text-shadow:0 10px 20px rgba(0,0,0,.4);}
+    .vs-cup{font-size:2.2rem;filter:drop-shadow(0 5px 10px rgba(0,0,0,.5));}
+    .time-status{margin-top:15px;font-size:1.2rem;font-weight:900;color:var(--green);text-shadow:0 0 10px rgba(74,222,128,0.4);}
+    .time-status.upcoming{color:var(--muted);font-size:1.1rem;text-shadow:none;}
+    .time-status.finished{color:#a5b4fc;font-size:1.1rem;text-shadow:none;}
+    .predict{margin-top:25px;padding-top:25px;border-top:1px dashed rgba(255,255,255,.15);}
+    .entry{display:flex;align-items:center;justify-content:space-between;gap:15px;background:rgba(0,0,0,.25);padding:12px;border-radius:24px;box-shadow:inset 0 4px 10px rgba(0,0,0,.3);}
+    .stepper-group{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border-radius:18px;padding:4px;border:1px solid rgba(255,255,255,.1);}
+    .step-btn{width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.1);color:#fff;font-size:1.5rem;font-weight:900;display:flex;align-items:center;justify-content:center;transition:.1s;}
+    .step-btn:active{background:rgba(255,255,255,.3);transform:scale(0.9);}
+    .step-btn:disabled{opacity:0.3;transform:none;}
+    .box{width:36px;text-align:center;font-size:1.5rem;font-weight:900;color:#fff;background:transparent;border:none;}
+    .dash{font-weight:900;color:rgba(255,255,255,.3);font-size:1.5rem;}
+    .save{padding:16px 24px;border-radius:18px;background:linear-gradient(135deg,#4ade80,#10b981);color:#000;font-weight:900;font-size:1rem;transition:.2s;box-shadow:0 8px 20px rgba(16,185,129,.4);}
+    .save:active:not(:disabled){transform:scale(0.92);box-shadow:0 4px 10px rgba(16,185,129,.4);}
+    .save:disabled{background:rgba(255,255,255,.1);color:var(--muted);box-shadow:none;}
+    .save.locked{background:rgba(255,95,119,.15);color:#ff5f77;box-shadow:none;}
+    .all-preds{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;}
+    .pred-tag{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:.85rem;font-weight:800;color:var(--muted);transition:0.3s;}
+    .pred-tag .ava{font-size:1.1rem;}
+    @keyframes glowGold{
+      0%{box-shadow:0 0 5px rgba(255,215,0,0.5);}
+      50%{box-shadow:0 0 20px rgba(255,215,0,0.8);}
+      100%{box-shadow:0 0 5px rgba(255,215,0,0.5);}
+    }
+    .pred-tag.exact{color:#ffd700;background:rgba(255,215,0,.15);border-color:#ffd700;animation:glowGold 2s infinite;transform:scale(1.05);}
+    .pred-tag.good{color:#4ade80;background:rgba(74,222,128,.15);border-color:#4ade80;}
+    .pred-tag.bad{opacity:0.6;}
+    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:100;}
+    .modal-wrap.open{display:flex;}
+    .modal{width:min(480px,90%);background:linear-gradient(135deg,#1e2345,#11152c);padding:30px;border-radius:32px;border:1px solid rgba(255,255,255,.1);box-shadow:0 25px 50px rgba(0,0,0,.5);}
+    .leader-row{display:flex;align-items:center;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+    .leader-row:last-child{border-bottom:none;}
+    .l-rank{font-size:1.5rem;width:40px;text-align:center;}
+    .l-info{margin-left:15px;}
+    .l-name{font-size:1.1rem;font-weight:900;}
+    .l-picks{font-size:.8rem;color:var(--muted);font-weight:700;}
+    .pts{margin-left:auto;font-size:2rem;font-weight:900;}
+    .leader-row.first .l-name{color:#ffd700;}
+    .leader-row.first .pts{color:#ffd700;}
+    .toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-100px);background:linear-gradient(135deg,#4ade80,#10b981);color:#000;padding:14px 28px;border-radius:999px;font-weight:900;font-size:1rem;transition:.4s cubic-bezier(0.175,0.885,0.32,1.275);z-index:200;opacity:0;box-shadow:0 10px 25px rgba(16,185,129,.4);}
+    .toast.show{transform:translate(-50%,0);opacity:1;}
+    @media(max-width:600px){
+      .score-row{font-size:3rem;gap:12px;}
+      .flag-wrap{font-size:2.8rem;}
+      .entry{flex-direction:column;align-items:stretch;}
+      .save{text-align:center;padding:18px;}
+      .stepper-group{justify-content:space-between;width:100%;}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-in">
+      <div class="brand">🏆 Pishbini Pro</div>
+      <button class="ghost" id="boardBtn">👑 Leaderboard</button>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Pishbini<br>Bazi Ha</h1>
+      <div class="players" id="playerTabs"></div>
+      <div class="filters">
+        <button class="filter active" data-view="upcoming">Upcoming 🕒</button>
+        <button class="filter" data-view="live">Live 🔴</button>
+        <button class="filter" data-view="finished">Finished ✅</button>
+        <button class="filter" data-view="all">All 🌍</button>
+      </div>
+    </section>
+    <section class="list" id="matchList"></section>
+  </main>
+  <div class="modal-wrap" id="boardModal">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2 style="font-weight:900;font-size:1.5rem;">👑 Leaderboard</h2>
+        <button class="ghost" id="closeBoard">Close</button>
+      </div>
+      <div id="leaderRows"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+const app = initializeApp({
+  apiKey:'AIzaSyB3T6VN31aw7bezi7wJh9kBSdTuOdAfHGo',
+  authDomain:'pishbini-bazi-ha.firebaseapp.com',
+  databaseURL:'https://pishbini-bazi-ha-default-rtdb.firebaseio.com',
+  projectId:'pishbini-bazi-ha',
+  storageBucket:'pishbini-bazi-ha.firebasestorage.app',
+  messagingSenderId:'195538591321',
+  appId:'1:195538591321:web:63a099506ee9a1b3a49b48'
+});
+const db = getDatabase(app);
+
+const PLAYERS = [
+  {id:'HANBA', ava:'🦅'},
+  {id:'YASIN BAMBA', ava:'🦁'},
+  {id:'AMA BAMBA', ava:'🐺'},
+  {id:'KAMBAB', ava:'🦍'}
+];
+
+const FLAGS = {'Argentina':'🇦🇷','Australia':'🇦🇺','Belgium':'🇧🇪','Bolivia':'🇧🇴','Brazil':'🇧🇷','Canada':'🇨🇦','Cameroon':'🇨🇲','Cape Verde':'🇨🇻','Chile':'🇨🇱','Colombia':'🇨🇴','Costa Rica':'🇨🇷','Croatia':'🇭🇷','Denmark':'🇩🇰','Ecuador':'🇪🇨','Egypt':'🇪🇬','England':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','France':'🇫🇷','Germany':'🇩🇪','Ghana':'🇬🇭','Honduras':'🇭🇳','Iceland':'🇮🇸','Iran':'🇮🇷','Japan':'🇯🇵','Mali':'🇲🇱','Mexico':'🇲🇽','Morocco':'🇲🇦','Netherlands':'🇳🇱','Nigeria':'🇳🇬','Norway':'🇳🇴','Panama':'🇵🇦','Paraguay':'🇵🇾','Peru':'🇵🇪','Poland':'🇵🇱','Portugal':'🇵🇹','Qatar':'🇶🇦','Saudi Arabia':'🇸🇦','Senegal':'🇸🇳','Serbia':'🇷🇸','South Korea':'🇰🇷','Spain':'🇪🇸','Sweden':'🇸🇪','Switzerland':'🇨🇭','Tunisia':'🇹🇳','Turkey':'🇹🇷','Ukraine':'🇺🇦','United States':'🇺🇸','USA':'🇺🇸','Uruguay':'🇺🇾','Venezuela':'🇻🇪','Wales':'🏴󠁧󠁢󠁷󠁬󠁳󠁿','Scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Jamaica':'🇯🇲','Guatemala':'🇬🇹','New Zealand':'🇳🇿'};
+
+const state = {player:'HANBA', view:'upcoming', fixtures:{}, results:{}, livescores:{}, predictions:{}};
+const $ = id => document.getElementById(id);
+
+window.stepVal = (id, delta) => {
+  const el = $(id);
+  if(el.disabled) return;
+  let v = parseInt(el.value||0) + delta;
+  if(v < 0) v = 0;
+  if(v > 20) v = 20;
+  el.value = v;
+  if(navigator.vibrate) navigator.vibrate(15);
+};
+
+function getIranStrings(match) {
+  if(!match.local_date) return {time:'00:00', date:'--'};
+  const d = new Date(match.local_date.replace(' ','T')+'Z');
+  const time = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tehran',hour:'2-digit',minute:'2-digit'}).format(d);
+  const date = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tehran',month:'short',day:'numeric'}).format(d);
+  return {time, date};
+}
+
+function startTs(m){ return new Date(m.local_date.replace(' ','T')+'Z').getTime(); }
+function hasStarted(m){ return Date.now() >= startTs(m); }
+function isFinished(m){ return String(m.finished||'').toUpperCase()==='TRUE'; }
+function isLive(m){ return !isFinished(m) && !!state.livescores[m.id]; }
+
+function calcPoints(pid){
+  let pts=0;
+  Object.entries(state.results).forEach(([id,r])=>{
+    const p=state.predictions[pid]?.[id];
+    if(!p) return;
+    if(+p.g1===+r.g1 && +p.g2===+r.g2) pts+=3;
+    else if((p.g1===p.g2&&r.g1===r.g2)||(p.g1>p.g2&&r.g1>r.g2)||(p.g1<p.g2&&r.g1<r.g2)) pts+=1;
+  });
+  return pts;
+}
+
+function renderAll(){
+  $('playerTabs').innerHTML = PLAYERS.map(p=>`
+    <button class="player ${state.player===p.id?'active':''}" data-player="${p.id}">
+      <span class="p-ava">${p.ava}</span>${p.id.split(' ')[0]}
+    </button>`).join('');
+
+  document.querySelectorAll('.player').forEach(b=>{
+    b.onclick=()=>{ state.player=b.dataset.player; if(navigator.vibrate)navigator.vibrate(20); renderAll(); };
+  });
+
+  document.querySelectorAll('.filter').forEach(b=>{
+    b.classList.toggle('active',b.dataset.view===state.view);
+    b.onclick=()=>{ state.view=b.dataset.view; if(navigator.vibrate)navigator.vibrate(20); renderAll(); };
+  });
+
+  const all=Object.values(state.fixtures).filter(m=>m&&m.home_name);
+  let visible=all;
+  if(state.view==='upcoming') visible=all.filter(m=>!isFinished(m)&&!hasStarted(m));
+  if(state.view==='live') visible=all.filter(m=>isLive(m));
+  if(state.view==='finished') visible=all.filter(m=>isFinished(m));
+  visible.sort((a,b)=>startTs(a)-startTs(b));
+
+  if(!visible.length){
+    $('matchList').innerHTML=`<div style="text-align:center;padding:60px 20px;color:var(--muted);font-weight:800;font-size:1.1rem;">No matches found 🤷</div>`;
+    return;
+  }
+
+  $('matchList').innerHTML=visible.map(m=>{
+    const id=m.id;
+    const live=isLive(m),fin=isFinished(m),started=hasStarted(m);
+    const ls=state.livescores[id],res=state.results[id],myPred=state.predictions[state.player]?.[id];
+    const tz=getIranStrings(m);
+    let g1='0',g2='0',statusUI='';
+    if(fin&&res){ g1=res.g1; g2=res.g2; statusUI=`<div class="time-status finished">FT ✅</div>`; }
+    else if(live&&ls){ g1=ls.g1; g2=ls.g2; statusUI=`<div class="time-status">${ls.minute||'LIVE'} 🔴</div>`; }
+    else { statusUI=`<div class="time-status upcoming">${tz.time}</div>`; }
+
+    const preds=PLAYERS.map(p=>{
+      const pr=state.predictions[p.id]?.[id];
+      if(!pr) return '';
+      let cls='pred-tag';
+      if(fin&&res){
+        if(+pr.g1===+res.g1&&+pr.g2===+res.g2) cls+=' exact';
+        else if((pr.g1===pr.g2&&res.g1===res.g2)||(pr.g1>pr.g2&&res.g1>res.g2)||(pr.g1<pr.g2&&res.g1<res.g2)) cls+=' good';
+        else cls+=' bad';
+      }
+      const icon=cls.includes('exact')?'🔥':(cls.includes('good')?'✅':p.ava);
+      return `<div class="${cls}"><span class="ava">${icon}</span>${p.id.split(' ')[0]}: ${pr.g1}-${pr.g2}</div>`;
+    }).join('');
+
+    return `
+      <div class="match ${live?'live':''}">
+        <div class="meta"><span>GROUP ${m.group||'-'}</span><span>${tz.date} · IRAN</span></div>
+        <div class="score-area">
+          <div class="team-col">
+            <div class="flag-wrap">${FLAGS[m.home_name]||'🏳️'}</div>
+            <div class="team-name">${m.home_name}</div>
+          </div>
+          <div class="center-col">
+            <div class="score-row"><span>${g1}</span><span class="vs-cup">🏆</span><span>${g2}</span></div>
+            ${statusUI}
+          </div>
+          <div class="team-col">
+            <div class="flag-wrap">${FLAGS[m.away_name]||'🏳️'}</div>
+            <div class="team-name">${m.away_name}</div>
+          </div>
+        </div>
+        <div class="predict">
+          <div class="entry">
+            <div class="stepper-group">
+              <button class="step-btn" onclick="window.stepVal('g1-${id}',-1)" ${started?'disabled':''}>−</button>
+              <input id="g1-${id}" class="box" type="number" value="${myPred?.g1??0}" readonly ${started?'disabled':''}>
+              <button class="step-btn" onclick="window.stepVal('g1-${id}',1)" ${started?'disabled':''}>+</button>
+            </div>
+            <span class="dash">−</span>
+            <div class="stepper-group">
+              <button class="step-btn" onclick="window.stepVal('g2-${id}',-1)" ${started?'disabled':''}>−</button>
+              <input id="g2-${id}" class="box" type="number" value="${myPred?.g2??0}" readonly ${started?'disabled':''}>
+              <button class="step-btn" onclick="window.stepVal('g2-${id}',1)" ${started?'disabled':''}>+</button>
+            </div>
+            <button class="save ${started?'locked':''}" data-id="${id}" ${started?'disabled':''}>
+              ${started?'🔒 Locked':'Save Pick'}
+            </button>
+          </div>
+          ${preds?`<div class="all-preds">${preds}</div>`:''}
+        </div>
+      </div>`;
+  }).join('');
+
+  document.querySelectorAll('.save:not(:disabled)').forEach(b=>{
+    b.onclick=async()=>{
+      const id=b.dataset.id;
+      const v1=$(`g1-${id}`).value, v2=$(`g2-${id}`).value;
+      if(navigator.vibrate)navigator.vibrate([50,50,50]);
+      b.innerHTML='Saving...';
+      await set(ref(db,`worldcup/shared/predictions/${state.player}/${id}`),{g1:+v1,g2:+v2});
+      b.innerHTML='Saved ✓';
+      setTimeout(()=>{ b.innerHTML='Save Pick'; },2000);
+      showToast(`${state.player.split(' ')[0]}: ${v1} - ${v2} 🔥`);
+    };
+  });
+}
+
+function updateLeaderboard(){
+  const ranks=PLAYERS.map(p=>({
+    name:p.id, ava:p.ava,
+    pts:calcPoints(p.id),
+    picks:Object.keys(state.predictions[p.id]||{}).length
+  })).sort((a,b)=>b.pts-a.pts||b.picks-a.picks);
+  $('leaderRows').innerHTML=ranks.map((r,i)=>`
+    <div class="leader-row ${i===0?'first':''}">
+      <div class="l-rank">${i===0?'👑':(i+1)+'.'}</div>
+      <div class="l-info">
+        <div class="l-name">${r.ava} ${r.name}</div>
+        <div class="l-picks">${r.picks} Picks</div>
+      </div>
+      <div class="pts">${r.pts}</div>
+    </div>`).join('');
+}
+
+function showToast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+onValue(ref(db,'worldcup/shared'),s=>{
+  const d=s.val()||{};
+  state.fixtures=d.fixtures||{}; state.results=d.results||{};
+  state.livescores=d.livescores||{}; state.predictions=d.predictions||{};
+  renderAll(); updateLeaderboard();
+});
+
+$('boardBtn').onclick=()=>{ updateLeaderboard(); $('boardModal').classList.add('open'); };
+$('closeBoard').onclick=()=>$('boardModal').classList.remove('open');
+$('boardModal').onclick=e=>{ if(e.target.id==='boardModal') e.currentTarget.classList.remove('open'); };
+</script>
+</body>
+</html>
